@@ -80,6 +80,7 @@ class CustomizeSearchListener
             if ($file->mtime > time() - 1800) {
                 return;
             }
+
             $file->delete();
         }
 
