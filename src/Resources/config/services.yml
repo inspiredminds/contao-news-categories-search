@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    public: false
+    autoconfigure: true
+
+  InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplateListener:
+    public: true
+
+  InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\IndexNewsCategoriesListener:
+    public: true
+    arguments: ['@contao.framework', '@database_connection']
+    tags:
+      - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate, priority: -255 }
+
+  InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\CustomizeSearchListener:
+    public: true 
+    arguments: ['%kernel.cache_dir%']
