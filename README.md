@@ -5,7 +5,7 @@
 Contao News Categories Search
 =====================
 
-Contao extension to allow search results to be filtered by news categories.
+Contao extension to allow search results of the front end search module to be filtered by news categories.
 
 
 ## Attributions
