@@ -22,7 +22,7 @@
         "contao/core-bundle": "^4.4",
         "contao/news-bundle": "^4.4",
         "symfony/config": "^3.2 || ^4.0",
-        "symfony/dependency-injection": "^3.2 || ^4.0",
+        "symfony/dependency-injection": "^3.2 || ^4.1.12",
         "symfony/filesystem": "^3.2 || ^4.0",
         "symfony/http-kernel": "^3.2 || ^4.0",
         "symfony/service-contracts": "^1.0 || ^2.0"
