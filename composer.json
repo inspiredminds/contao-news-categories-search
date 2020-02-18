@@ -15,6 +15,12 @@
         "issues": "https://github.com/inspiredminds/contao-news-categories-search/issues",
         "source": "https://github.com/inspiredminds/contao-news-categories-search"
     },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/fritzmg"
+        }
+    ],
     "require": {
         "php": ">=7.1",
         "codefog/contao-news_categories": "^3.1",
