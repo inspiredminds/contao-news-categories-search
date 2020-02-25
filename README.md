@@ -13,6 +13,8 @@ categories.
 Once filtering is enabled, the search module will additionally show checkboxes 
 for each category, whith the user can then select.
 
+_Note:_ after installing this extension, you need to re-index the search index.
+
 
 ## Attributions
 
