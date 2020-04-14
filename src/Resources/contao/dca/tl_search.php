@@ -20,3 +20,9 @@ $GLOBALS['TL_DCA']['tl_search']['fields']['news_categories'] = [
         'relationTable' => 'tl_search_categories',
     ],
 ];
+
+$GLOBALS['TL_DCA']['tl_search']['fields']['newsId'] = [
+    'foreignKey' => 'tl_news.headline',
+    'sql' => "int(10) unsigned NOT NULL default '0'",
+    'relation' => ['type' => 'belongsTo', 'load' => 'lazy'],
+];

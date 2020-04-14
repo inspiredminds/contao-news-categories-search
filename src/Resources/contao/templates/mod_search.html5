@@ -25,10 +25,23 @@
           <fieldset class="checkbox_container">
             <legend><?= $this->categoryFilterLegend ?></legend>
             <?php foreach ($this->newsCategoriesOptions as $option): ?>
-              <span><input type="checkbox" name="<?= $option['name'] ?>" id="cat_<?= $option['id'] ?>" class="checkbox" value="<?= $option['value'] ?>"<?= $option['checked'] ?>> <label id="lbl_<?= $option['id'] ?>" for="cat_<?= $option['id'] ?>"><?= $option['label'] ?></label></span>
+              <span><input type="checkbox" name="<?= $option['name'] ?>" id="cat_<?= $option['id'] ?>_<?= $this->uniqueId ?>" class="checkbox" value="<?= $option['value'] ?>"<?= $option['checked'] ?>> <label id="lbl_<?= $option['id'] ?>_<?= $this->uniqueId ?>" for="cat_<?= $option['id'] ?>_<?= $this->uniqueId ?>"><?= $option['label'] ?></label></span>
             <?php endforeach; ?>
           </fieldset>
         </div>
+      <?php endif; ?>
+      <?php if ($this->search_enableTimeFilter): ?>
+        <fieldset class="checkbox_container">
+          <legend><?= $this->timeframeFilterLegend ?></legend>
+          <div class="widget widget-text">
+            <label for="ctrl_date_start_<?= $this->uniqueId ?>"><?= $this->startDateLabel ?></label>
+            <input type="text" name="start" id="ctrl_date_start_<?= $this->uniqueId ?>" class="text" value="<?= $this->startDate ?>">
+          </div>
+          <div class="widget widget-text">
+            <label for="ctrl_date_end_<?= $this->uniqueId ?>"><?= $this->endDateLabel ?></label>
+            <input type="text" name="end" id="ctrl_date_end_<?= $this->uniqueId ?>" class="text" value="<?= $this->endDate ?>">
+          </div>
+        </fieldset>
       <?php endif; ?>
     </div>
   </form>

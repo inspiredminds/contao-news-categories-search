@@ -13,6 +13,9 @@ categories.
 Once filtering is enabled, the search module will additionally show checkboxes 
 for each category, whith the user can then select.
 
+Additionally, you can also enable filtering by timeframe. This will filter the results
+by the found news entry's dates.
+
 _Note:_ after installing this extension, you need to re-index the search index.
 
 

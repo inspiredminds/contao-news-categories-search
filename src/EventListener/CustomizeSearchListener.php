@@ -15,6 +15,7 @@ namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener;
 use Contao\File;
 use Contao\Input;
 use Contao\Module;
+use Contao\NewsModel;
 use Contao\Search;
 use Contao\StringUtil;
 use Symfony\Component\Filesystem\Filesystem;
@@ -38,37 +39,64 @@ class CustomizeSearchListener
 
     public function __invoke(array &$pageIds, string $keywords, string &$queryType, bool $fuzzy, Module $module): void
     {
-        // No actions needed, if not enabled
-        if (!$module->search_enableNewsCategoriesFilter) {
-            return;
-        }
-
         // No actions needed, if no pages to be searched are given
         if (empty($pageIds) || !\is_array($pageIds)) {
             return;
         }
 
-        $categoryIds = Input::get(ParseTemplateListener::OPTION_NAME);
+        // Save the original "queryType"
+        $originalQueryType = $queryType;
 
-        // No actions needed, if no catgories are selected
-        if (empty($categoryIds)) {
+        // Filter by categories
+        $categoryIds = [];
+
+        if ($module->search_enableNewsCategoriesFilter) {
+            $categoryIds = Input::get(ParseTemplateListener::OPTION_NAME);
+
+            if (!empty($categoryIds)) {
+                $categoryIds = array_map('intval', $categoryIds);
+                $allowedCategoryIds = array_map('intval', StringUtil::deserialize($module->news_categories, true));
+
+                if (!empty($allowedCategoryIds)) {
+                    $categoryIds = array_intersect($categoryIds, $allowedCategoryIds);
+                }
+
+                // Modify "queryType" for caching
+                $queryType .= '|'.ParseTemplateListener::OPTION_NAME.':'.implode(',', $categoryIds).'|';
+            }
+        }
+
+        // Filter by timeframe
+        $startDate = null;
+        $endDate = null;
+
+        if ($module->search_enableTimeFilter) {
+            $start = Input::get('start');
+            $end = Input::get('end');
+
+            if (!empty($start) && !empty($end)) {
+                $start = strtotime($start);
+                $end = strtotime($end);
+                
+                if ($start > 0 && $end > 0) {
+                    $startDate = $start;
+                    $endDate = $end;
+
+                    // Modify "queryType" for caching
+                    $queryType .= '|'.$startDate.'-'.$endDate.'|';
+                }
+            }
+        }
+
+        // Early out
+        if ((empty($startDate) || empty($endDate)) && empty($categoryIds)) {
+            $queryType = $originalQueryType;
             return;
         }
 
-        $categoryIds = array_map('intval', $categoryIds);
-        $allowedCategoryIds = array_map('intval', StringUtil::deserialize($module->news_categories, true));
-
-        if (!empty($allowedCategoryIds)) {
-            $categoryIds = array_intersect($categoryIds, $allowedCategoryIds);
-        }
-
-        // Modify "queryType" for caching
-        $originalQueryType = $queryType;
-        $queryType .= '|'.ParseTemplateListener::OPTION_NAME.':'.implode(',', $categoryIds).'|';
-
         // Determine cache file
         global $objPage;
-        $rootId = $this->rootPage ?: $objPage->rootId;
+        $rootId = $module->rootPage ?: $objPage->rootId;
         $cacheChecksum = md5($keywords.$queryType.$rootId.$fuzzy);
         $cacheFile = $this->cacheDir.'/contao/search/'.$cacheChecksum.'.json';
 
@@ -78,12 +106,13 @@ class CustomizeSearchListener
             $file = new File(StringUtil::stripRootDir($cacheFile));
 
             if ($file->mtime > time() - 1800) {
-                return;
+                //return;
             }
 
             $file->delete();
         }
 
+        // Fetch the search result
         $results = [];
 
         try {
@@ -94,16 +123,35 @@ class CustomizeSearchListener
         }
 
         // Filter the results according to the selected categories
-        $categoryReferences = array_map('intval', \Haste\Model\Model::getReferenceValues('tl_search', 'news_categories', $categoryIds));
-        $filteredResults = [];
+        if ($module->search_enableNewsCategoriesFilter && !empty($categoryIds)) {
+            $categoryReferences = array_map('intval', \Haste\Model\Model::getReferenceValues('tl_search', 'news_categories', $categoryIds));
+            $filteredResults = [];
 
-        foreach ($results as $result) {
-            if (\in_array((int) $result['id'], $categoryReferences, true)) {
-                $filteredResults[] = $result;
+            foreach ($results as $result) {
+                if (\in_array((int) $result['id'], $categoryReferences, true)) {
+                    $filteredResults[] = $result;
+                }
             }
+
+            $results = $filteredResults;
+        }
+
+        // Filter the results according to start and end date
+        if ($module->search_enableTimeFilter && !empty($startDate) && !empty($endDate)) {
+            $filteredResults = [];
+
+            foreach ($results as $result) {
+                if (!empty($result['newsId']) && null !== ($news = NewsModel::findById($result['newsId']))) {
+                    if ((int) $news->date >= $startDate && (int) $news->date <= $endDate) {
+                        $filteredResults[] = $result;
+                    }
+                }
+            }
+
+            $results = $filteredResults;
         }
 
         // Write a cache file
-        $fs->dumpFile($cacheFile, json_encode($filteredResults));
+        $fs->dumpFile($cacheFile, json_encode($results));
     }
 }
