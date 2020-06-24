@@ -66,6 +66,10 @@ class CustomizeSearchListener
             }
         }
 
+        if ($module->search_news_sorting) {
+            $queryType .= '|'.$module->search_news_sorting.'|';
+        }
+
         // Filter by timeframe
         $startDate = null;
         $endDate = null;
@@ -150,7 +154,7 @@ class CustomizeSearchListener
 
             $results = $filteredResults;
         }
-
+dump($results);
         // Sort the results
         if (!empty($module->search_news_sorting)) {
             usort($results, function($a, $b) use ($module) {
@@ -171,6 +175,28 @@ class CustomizeSearchListener
 
                 return (float) $b['relevance'] - (float) $a['relevance'];
             });
+
+            $maxRelevance = 0;
+            $newsItemsCount = 0;
+
+            foreach ($results as $result) {
+                if ((float) $result['relevance'] > $maxRelevance) {
+                    $maxRelevance = (float) $result['relevance'];
+                }
+
+                if (!empty($result['newsId'])) {
+                    ++$newsItemsCount;
+                }
+            }
+
+            $maxRelevance += $newsItemsCount;
+
+            foreach ($results as &$result) {
+                if (!empty($result['newsId'])) {
+                    $result['relevance'] = $maxRelevance;
+                    $maxRelevance -= 1;
+                }
+            }
         }
 
         // Write a cache file
