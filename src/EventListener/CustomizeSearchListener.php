@@ -89,7 +89,7 @@ class CustomizeSearchListener
         }
 
         // Early out
-        if ((empty($startDate) || empty($endDate)) && empty($categoryIds)) {
+        if ((empty($startDate) || empty($endDate)) && empty($categoryIds) && empty($module->search_news_sorting)) {
             $queryType = $originalQueryType;
             return;
         }
@@ -106,7 +106,7 @@ class CustomizeSearchListener
             $file = new File(StringUtil::stripRootDir($cacheFile));
 
             if ($file->mtime > time() - 1800) {
-                //return;
+                return;
             }
 
             $file->delete();
@@ -149,6 +149,28 @@ class CustomizeSearchListener
             }
 
             $results = $filteredResults;
+        }
+
+        // Sort the results
+        if (!empty($module->search_news_sorting)) {
+            usort($results, function($a, $b) use ($module) {
+                $na = NewsModel::findById($a['newsId']);
+                $nb = NewsModel::findById($b['newsId']);
+
+                if (null !== $na && null !== $nb) {
+                    if ($module->search_news_sorting === 'date_asc') {
+                        $temp = $na;
+                        $na = $nb;
+                        $nb = $temp;
+                    }
+
+                    if ((int) $na->date !== (int) $nb->date) {
+                        return (int) $nb->date - (int) $na->date;
+                    }
+                }
+
+                return (float) $b['relevance'] - (float) $a['relevance'];
+            });
         }
 
         // Write a cache file
