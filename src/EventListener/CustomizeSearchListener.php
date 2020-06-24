@@ -154,7 +154,7 @@ class CustomizeSearchListener
 
             $results = $filteredResults;
         }
-dump($results);
+
         // Sort the results
         if (!empty($module->search_news_sorting)) {
             usort($results, function($a, $b) use ($module) {
