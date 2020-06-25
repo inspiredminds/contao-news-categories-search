@@ -73,7 +73,7 @@ class IndexNewsCategoriesListener implements ResetInterface
 
                 if (false !== $searchEntry) {
                     $this->db->executeQuery("DELETE FROM `$table` WHERE `$referenceField` = ?", [(int) $searchEntry['id']]);
-                    $this->db->executeQuery("UPDATE `tl_search` SET `newsId` = ? WHERE `id` = ?", [(int) $news->id, (int) $searchEntry['id']]);
+                    $this->db->executeQuery('UPDATE `tl_search` SET `newsId` = ? WHERE `id` = ?', [(int) $news->id, (int) $searchEntry['id']]);
 
                     foreach ($categories as $category) {
                         $this->db->executeQuery("INSERT INTO `$table` SET `$referenceField` = ?, `$relatedField` = ?", [

@@ -33,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['search_news_sorting'] = [
     'inputType' => 'select',
     'options' => [
         'date_desc',
-        'date_asc'
+        'date_asc',
     ],
     'reference' => &$GLOBALS['TL_LANG']['tl_module']['search_news_sorting_options'],
     'eval' => ['tl_class' => 'clr w50', 'includeBlankOption' => true, 'blankOptionLabel' => &$GLOBALS['TL_LANG']['tl_module']['search_news_sorting_blank']],

@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener;
+namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate;
 
 use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
 use Contao\Input;
@@ -18,7 +18,10 @@ use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\Template;
 
-class ParseTemplateListener
+/**
+ * Sets the filter options in the mod_search template.
+ */
+class ModuleSearchListener
 {
     public const OPTION_NAME = 'categories';
 

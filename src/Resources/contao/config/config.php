@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 use InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\CustomizeSearchListener;
 use InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\IndexNewsCategoriesListener;
-use InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplateListener;
+use InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate\ModuleSearchListener;
+use InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate\SearchListener;
 
-$GLOBALS['TL_HOOKS']['parseTemplate'][] = [ParseTemplateListener::class, '__invoke'];
+$GLOBALS['TL_HOOKS']['parseTemplate'][] = [ModuleSearchListener::class, '__invoke'];
+$GLOBALS['TL_HOOKS']['parseTemplate'][] = [SearchListener::class, '__invoke'];
 $GLOBALS['TL_HOOKS']['parseArticles'][] = [IndexNewsCategoriesListener::class, 'onParseArticles'];
 $GLOBALS['TL_HOOKS']['customizeSearch'][] = [CustomizeSearchListener::class, '__invoke'];

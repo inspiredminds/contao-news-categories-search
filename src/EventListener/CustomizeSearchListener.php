@@ -18,6 +18,7 @@ use Contao\Module;
 use Contao\NewsModel;
 use Contao\Search;
 use Contao\StringUtil;
+use InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate\ModuleSearchListener;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -51,7 +52,7 @@ class CustomizeSearchListener
         $categoryIds = [];
 
         if ($module->search_enableNewsCategoriesFilter) {
-            $categoryIds = Input::get(ParseTemplateListener::OPTION_NAME);
+            $categoryIds = Input::get(ModuleSearchListener::OPTION_NAME);
 
             if (!empty($categoryIds)) {
                 $categoryIds = array_map('intval', $categoryIds);
@@ -62,7 +63,7 @@ class CustomizeSearchListener
                 }
 
                 // Modify "queryType" for caching
-                $queryType .= '|'.ParseTemplateListener::OPTION_NAME.':'.implode(',', $categoryIds).'|';
+                $queryType .= '|'.ModuleSearchListener::OPTION_NAME.':'.implode(',', $categoryIds).'|';
             }
         }
 
@@ -81,7 +82,7 @@ class CustomizeSearchListener
             if (!empty($start) && !empty($end)) {
                 $start = strtotime($start);
                 $end = strtotime($end);
-                
+
                 if ($start > 0 && $end > 0) {
                     $startDate = $start;
                     $endDate = $end;
@@ -95,6 +96,7 @@ class CustomizeSearchListener
         // Early out
         if ((empty($startDate) || empty($endDate)) && empty($categoryIds) && empty($module->search_news_sorting)) {
             $queryType = $originalQueryType;
+
             return;
         }
 
@@ -157,12 +159,12 @@ class CustomizeSearchListener
 
         // Sort the results
         if (!empty($module->search_news_sorting)) {
-            usort($results, function($a, $b) use ($module) {
+            usort($results, function ($a, $b) use ($module) {
                 $na = NewsModel::findById($a['newsId']);
                 $nb = NewsModel::findById($b['newsId']);
 
                 if (null !== $na && null !== $nb) {
-                    if ($module->search_news_sorting === 'date_asc') {
+                    if ('date_asc' === $module->search_news_sorting) {
                         $temp = $na;
                         $na = $nb;
                         $nb = $temp;
@@ -194,7 +196,7 @@ class CustomizeSearchListener
             foreach ($results as &$result) {
                 if (!empty($result['newsId'])) {
                     $result['relevance'] = $maxRelevance;
-                    $maxRelevance -= 1;
+                    --$maxRelevance;
                 }
             }
         }
