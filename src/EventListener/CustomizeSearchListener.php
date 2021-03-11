@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Implements a "customizeSearch" Hook.
  *
- * The Hook will execute the search in advance, and filter the results according
+ * The Hook will execute the search in advance, and filter the results according to
  * the given categories. It will then modify the query type and create a cache file
  * directly with the modified query type. This will cause \Contao\ModuleSearch to
  * load the existing cache file of the search with the already filtered results.
