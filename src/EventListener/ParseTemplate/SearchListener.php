@@ -34,7 +34,7 @@ class SearchListener
             return;
         }
 
-        $searchEntry = $this->db->fetchAssoc('SELECT * FROM `tl_search` WHERE `url` = ? LIMIT 1', [$template->url]);
+        $searchEntry = $this->db->fetchAssociative('SELECT * FROM `tl_search` WHERE `url` = ? LIMIT 1', [$template->url]);
 
         if (false === $searchEntry || empty($searchEntry['newsId'])) {
             return;
