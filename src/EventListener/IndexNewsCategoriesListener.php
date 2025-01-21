@@ -23,6 +23,7 @@ use Contao\NewsModel;
 use Doctrine\DBAL\Connection;
 use Haste\Model\Relations;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Contracts\Service\ResetInterface;
 
 class IndexNewsCategoriesListener implements ResetInterface
@@ -55,9 +56,9 @@ class IndexNewsCategoriesListener implements ResetInterface
         }
     }
 
-    public function onKernelTerminate(PostResponseEvent $event): void
+    public function onKernelTerminate(TerminateEvent $event): void
     {
-        if (!$this->framework->isInitialized()) {
+        if (!$this->framework->isInitialized() || !$event->isMainRequest()) {
             return;
         }
 
