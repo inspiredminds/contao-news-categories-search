@@ -3,14 +3,10 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the ContaoNewsCategoriesSearchBundle.
- *
- * (c) inspiredminds
- *
- * @license LGPL-3.0-or-later
+ * (c) INSPIRED MINDS
  */
 
-namespace InspiredMinds\ContaoNewsCategoriesSearchBundle;
+namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\ContaoManager;
 
 use Codefog\NewsCategoriesBundle\CodefogNewsCategoriesBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -18,15 +14,13 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\NewsBundle\ContaoNewsBundle;
+use InspiredMinds\ContaoNewsCategoriesSearchBundle\ContaoNewsCategoriesSearchBundle;
 
 /**
  * Plugin for the Contao Manager.
  */
-class ContaoManagerPlugin implements BundlePluginInterface
+class Plugin implements BundlePluginInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getBundles(ParserInterface $parser)
     {
         return [
@@ -35,7 +29,6 @@ class ContaoManagerPlugin implements BundlePluginInterface
                     ContaoCoreBundle::class,
                     ContaoNewsBundle::class,
                     CodefogNewsCategoriesBundle::class,
-                    'haste',
                 ]),
         ];
     }

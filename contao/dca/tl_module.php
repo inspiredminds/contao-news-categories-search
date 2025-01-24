@@ -3,11 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the ContaoNewsCategoriesSearchBundle.
- *
- * (c) inspiredminds
- *
- * @license LGPL-3.0-or-later
+ * (c) INSPIRED MINDS
  */
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
@@ -24,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['search_enableNewsCategoriesFilter'] =
 $GLOBALS['TL_DCA']['tl_module']['fields']['search_enableTimeFilter'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_module']['search_enableTimeFilter'],
     'inputType' => 'checkbox',
-    'eval' => ['submitOnChange' => true, 'tl_class' => 'clr'],
+    'eval' => ['tl_class' => 'clr w50'],
     'sql' => ['type' => 'boolean', 'default' => 0],
 ];
 

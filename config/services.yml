@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    InspiredMinds\ContaoNewsCategoriesSearchBundle\:
+        resource: ../src
+        exclude: ../src/{ContaoManager,DependencyInjection,Event,ContaoNewsCategoriesSearchBundle.php}

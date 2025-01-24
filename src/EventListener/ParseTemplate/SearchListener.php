@@ -3,15 +3,12 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the ContaoNewsCategoriesSearchBundle.
- *
- * (c) inspiredminds
- *
- * @license LGPL-3.0-or-later
+ * (c) INSPIRED MINDS
  */
 
 namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\NewsModel;
 use Contao\Template;
 use Doctrine\DBAL\Connection;
@@ -19,13 +16,11 @@ use Doctrine\DBAL\Connection;
 /**
  * Sets the news record for the search record in the search_* template.
  */
+#[AsHook('parseTemplate')]
 class SearchListener
 {
-    private $db;
-
-    public function __construct(Connection $db)
+    public function __construct(private readonly Connection $db)
     {
-        $this->db = $db;
     }
 
     public function __invoke(Template $template): void

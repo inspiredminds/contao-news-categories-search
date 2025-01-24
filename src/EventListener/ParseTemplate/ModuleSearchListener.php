@@ -3,27 +3,30 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the ContaoNewsCategoriesSearchBundle.
- *
- * (c) inspiredminds
- *
- * @license LGPL-3.0-or-later
+ * (c) INSPIRED MINDS
  */
 
 namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate;
 
 use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\Input;
 use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\Template;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Sets the filter options in the mod_search template.
  */
+#[AsHook('parseTemplate')]
 class ModuleSearchListener
 {
     public const OPTION_NAME = 'categories';
+
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
     public function __invoke(Template $template): void
     {
@@ -31,10 +34,10 @@ class ModuleSearchListener
             return;
         }
 
-        $template->categoryFilterLegend = $GLOBALS['TL_LANG']['MSC']['search_filterByCategories'];
-        $template->timeframeFilterLegend = $GLOBALS['TL_LANG']['MSC']['search_filterByTime'];
-        $template->startDateLabel = $GLOBALS['TL_LANG']['MSC']['search_filterStartDate'];
-        $template->endDateLabel = $GLOBALS['TL_LANG']['MSC']['search_filterEndDate'];
+        $template->categoryFilterLegend = $this->translator->trans('MSC.search_filterByCategories', [], 'contao_default');
+        $template->timeframeFilterLegend = $this->translator->trans('MSC.search_filterByTime', [], 'contao_default');
+        $template->startDateLabel = $this->translator->trans('MSC.search_filterStartDate', [], 'contao_default');
+        $template->endDateLabel = $this->translator->trans('MSC.search_filterEndDate', [], 'contao_default');
 
         $module = ModuleModel::findById($template->id);
 
