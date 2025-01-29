@@ -8,4 +8,5 @@ services:
         exclude: ../src/{ContaoManager,DependencyInjection,Event,ContaoNewsCategoriesSearchBundle.php}
 
     InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\IndexNewsCategoriesListener:
-        tags: [kernel.event_listener]
+        tags: 
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }

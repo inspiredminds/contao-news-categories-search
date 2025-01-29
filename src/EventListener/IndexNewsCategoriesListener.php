@@ -31,9 +31,9 @@ class IndexNewsCategoriesListener implements ResetInterface
 
     private Connection $db;
 
-    private DcaRelationsManager|null $dcaRelationsManager;
+    private ?DcaRelationsManager $dcaRelationsManager;
 
-    public function __construct(ContaoFramework $framework, Connection $db, DcaRelationsManager|null $dcaRelationsManager = null)
+    public function __construct(ContaoFramework $framework, Connection $db, ?DcaRelationsManager $dcaRelationsManager = null)
     {
         $this->framework = $framework;
         $this->db = $db;
