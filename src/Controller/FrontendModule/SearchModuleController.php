@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @FrontendModule("search", "application", priority=1)
+ * @FrontendModule("search", category="application")
  */
 class SearchModuleController extends ModuleSearch
 {
@@ -67,7 +67,7 @@ class SearchModuleController extends ModuleSearch
             $_GET['per_page'] = Input::post('per_page');
         }
 
-        $blnFuzzy = $this->fuzzy;
+        $blnFuzzy = (bool) $this->fuzzy;
         $strQueryType = Input::get('query_type') ?: $this->queryType;
 
         if (\is_array(Input::get('keywords')))
@@ -147,7 +147,7 @@ class SearchModuleController extends ModuleSearch
 
             try
             {
-                $objResult = Search::query($strKeywords, ($strQueryType == 'or'), $arrPages, $blnFuzzy, $this->minKeywordLength);
+                $objResult = Search::query($strKeywords, ($strQueryType == 'or'), $arrPages, $blnFuzzy, (int) $this->minKeywordLength);
             }
             catch (\Exception $e)
             {

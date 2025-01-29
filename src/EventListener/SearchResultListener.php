@@ -17,11 +17,9 @@ use Doctrine\DBAL\Connection;
 use Haste\Model\Model as HasteModel;
 use InspiredMinds\ContaoNewsCategoriesSearchBundle\Event\SearchResultEvent;
 use InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate\ModuleSearchListener;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-#[AsEventListener]
 class SearchResultListener
 {
     private RequestStack $requestStack;

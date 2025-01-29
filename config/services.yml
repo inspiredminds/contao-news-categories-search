@@ -10,3 +10,7 @@ services:
     InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\IndexNewsCategoriesListener:
         tags: 
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\SearchResultListener:
+        tags:
+            - { name: kernel.event_listener, event: InspiredMinds\ContaoNewsCategoriesSearchBundle\Event\SearchResultEvent, method: __invoke }
