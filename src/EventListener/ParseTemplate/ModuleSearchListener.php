@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate;
 
 use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Input;
 use Contao\ModuleModel;
 use Contao\StringUtil;
@@ -18,14 +18,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Sets the filter options in the mod_search template.
+ *
+ * @Hook("parseTemplate")
  */
-#[AsHook('parseTemplate')]
 class ModuleSearchListener
 {
     public const OPTION_NAME = 'categories';
 
-    public function __construct(private readonly TranslatorInterface $translator)
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
     {
+        $this->translator = $translator;
     }
 
     public function __invoke(Template $template): void

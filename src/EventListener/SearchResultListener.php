@@ -24,10 +24,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 #[AsEventListener]
 class SearchResultListener
 {
+    private RequestStack $requestStack;
+    private Connection $db;
+
     public function __construct(
-        private readonly RequestStack $requestStack,
-        private readonly Connection $db,
+        RequestStack $requestStack,
+        Connection $db
     ) {
+        $this->requestStack = $requestStack;
+        $this->db = $db;
     }
 
     public function __invoke(SearchResultEvent $event): void
@@ -119,8 +124,9 @@ class SearchResultListener
         $result = $event->getSearchResult();
         $module = $event->getSearchModuleModel();
 
-        $searchResultReflection = new \ReflectionClass(SearchResult::class);
-        $results = $searchResultReflection->getProperty('arrResultsById')->getValue($result);
+        $searchResultProperty =  (new \ReflectionClass(SearchResult::class))->getProperty('arrResultsById');
+        $searchResultProperty->setAccessible(true);
+        $results = $searchResultProperty->getValue($result);
 
         $newsIds = $this->db->fetchAllKeyValue('SELECT id, newsId FROM tl_search WHERE id IN (?)', [array_keys($results)], [ArrayParameterType::INTEGER]);
 
@@ -146,6 +152,6 @@ class SearchResultListener
             },
         );
 
-        $searchResultReflection->getProperty('arrResultsById')->setValue($result, $results);
+        $searchResultProperty->setValue($result, $results);
     }
 }

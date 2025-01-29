@@ -17,7 +17,8 @@ class ContaoNewsCategoriesSearchExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
-        $loader->load('services.yml');
+        (new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config')))
+            ->load('services.yml')
+        ;
     }
 }

@@ -10,8 +10,8 @@ namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener;
 
 use Codefog\HasteBundle\DcaRelationsManager;
 use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Environment;
 use Contao\FrontendTemplate;
 use Contao\Input;
@@ -20,9 +20,6 @@ use Contao\ModuleNewsReader;
 use Contao\NewsModel;
 use Doctrine\DBAL\Connection;
 use Haste\Model\Relations;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -30,16 +27,23 @@ class IndexNewsCategoriesListener implements ResetInterface
 {
     private static bool $queueIndexing = false;
 
+    private ContaoFramework $framework;
+    private Connection $db;
+    private ?DcaRelationsManager $dcaRelationsManager;
+
     public function __construct(
-        private readonly RequestStack $requestStack,
-        private readonly ContaoFramework $framework,
-        private readonly Connection $db,
-        private readonly LoggerInterface $logger,
-        private readonly DcaRelationsManager|null $dcaRelationsManager = null,
+       ContaoFramework $framework,
+       Connection $db,
+       ?DcaRelationsManager $dcaRelationsManager = null
     ) {
+        $this->framework = $framework;
+        $this->db = $db;
+        $this->dcaRelationsManager = $dcaRelationsManager;
     }
 
-    #[AsHook('parseArticles')]
+    /**
+     * @Hook("parseArticles")
+     */
     public function onParseArticles(FrontendTemplate $template, array $newsEntry, Module $module): void
     {
         if ($module instanceof ModuleNewsReader) {
@@ -47,7 +51,6 @@ class IndexNewsCategoriesListener implements ResetInterface
         }
     }
 
-    #[AsEventListener('kernel.terminate')]
     public function onKernelTerminate(TerminateEvent $event): void
     {
         if (!$this->framework->isInitialized() || !$event->isMainRequest()) {

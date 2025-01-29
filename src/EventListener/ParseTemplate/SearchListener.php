@@ -9,18 +9,23 @@ declare(strict_types=1);
 namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\NewsModel;
 use Contao\Template;
 use Doctrine\DBAL\Connection;
 
 /**
  * Sets the news record for the search record in the search_* template.
+ * 
+ * @Hook("parseTemplate")
  */
-#[AsHook('parseTemplate')]
 class SearchListener
 {
-    public function __construct(private readonly Connection $db)
+    private Connection $db;
+
+    public function __construct(Connection $db)
     {
+        $this->db = $db;
     }
 
     public function __invoke(Template $template): void

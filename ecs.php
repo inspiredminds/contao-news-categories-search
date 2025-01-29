@@ -16,6 +16,7 @@ return ECSConfig::configure()
     ->withConfiguredRule(HeaderCommentFixer::class, ['header' => '(c) INSPIRED MINDS'])
     ->withSkip([
         CommentLengthFixer::class,
+        __DIR__.'/src/Controller/FrontendModule/SearchModuleController.php',
     ])
     ->withParallel()
     ->withSpacing(lineEnding: "\n")

@@ -6,3 +6,6 @@ services:
     InspiredMinds\ContaoNewsCategoriesSearchBundle\:
         resource: ../src
         exclude: ../src/{ContaoManager,DependencyInjection,Event,ContaoNewsCategoriesSearchBundle.php}
+
+    InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\IndexNewsCategoriesListener:
+        tags: [kernel.event_listener]
