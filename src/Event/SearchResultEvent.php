@@ -15,21 +15,20 @@ use Symfony\Contracts\EventDispatcher\Event;
 class SearchResultEvent extends Event
 {
     private SearchResult $searchResult;
+
     private ModuleModel $searchModuleModel;
+
     private array $pageIds;
+
     private string $keywords;
+
     private string $queryType;
 
     /**
      * @param list<int> $pageIds
      */
-    public function __construct(
-        SearchResult $searchResult,
-        ModuleModel $searchModuleModel,
-        array $pageIds,
-        string $keywords,
-        string $queryType
-    ) {
+    public function __construct(SearchResult $searchResult, ModuleModel $searchModuleModel, array $pageIds, string $keywords, string $queryType)
+    {
         $this->searchResult = $searchResult;
         $this->searchModuleModel = $searchModuleModel;
         $this->pageIds = $pageIds;

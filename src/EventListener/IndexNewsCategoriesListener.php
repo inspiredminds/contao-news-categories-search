@@ -28,14 +28,13 @@ class IndexNewsCategoriesListener implements ResetInterface
     private static bool $queueIndexing = false;
 
     private ContaoFramework $framework;
-    private Connection $db;
-    private ?DcaRelationsManager $dcaRelationsManager;
 
-    public function __construct(
-       ContaoFramework $framework,
-       Connection $db,
-       ?DcaRelationsManager $dcaRelationsManager = null
-    ) {
+    private Connection $db;
+
+    private DcaRelationsManager|null $dcaRelationsManager;
+
+    public function __construct(ContaoFramework $framework, Connection $db, DcaRelationsManager|null $dcaRelationsManager = null)
+    {
         $this->framework = $framework;
         $this->db = $db;
         $this->dcaRelationsManager = $dcaRelationsManager;

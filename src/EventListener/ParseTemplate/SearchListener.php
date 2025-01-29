@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace InspiredMinds\ContaoNewsCategoriesSearchBundle\EventListener\ParseTemplate;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\NewsModel;
 use Contao\Template;
@@ -16,7 +15,7 @@ use Doctrine\DBAL\Connection;
 
 /**
  * Sets the news record for the search record in the search_* template.
- * 
+ *
  * @Hook("parseTemplate")
  */
 class SearchListener
